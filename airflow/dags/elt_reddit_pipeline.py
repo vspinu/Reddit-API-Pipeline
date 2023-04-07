@@ -1,8 +1,7 @@
-from os import remove
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.utils.dates import days_ago
-from datetime import timedelta, datetime
+from datetime import datetime
 
 """
 DAG to extract Reddit data, load into AWS S3, and copy to AWS Redshift
