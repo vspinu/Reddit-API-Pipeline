@@ -26,9 +26,10 @@ Next, you'll need to create a configuration file with your details. The extract 
     aws_region = XXXXX
 
     [reddit_config]
+    subreddit = dataengineering
+    appname = XXXXX
+    username = XXXXX
     secret = XXXXX
-    developer = XXXXX
-    name = XXXXX
     client_id = XXXXX
     ```
 
