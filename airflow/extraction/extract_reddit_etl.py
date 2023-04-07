@@ -2,8 +2,11 @@ import pandas as pd
 import praw
 import sys
 import utils
-# from psaw import PushshiftAPI
-# from datetime import timedelta
+import logging
+
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger("reddit")
+
 
 """
 Part of Airflow DAG. Takes in one command line argument of format YYYYMMDD. 
@@ -56,18 +59,23 @@ if __name__ == "__main__":
     file = __file__
     arg = sys.argv[1]
 
+    log.info("Reading config ...")
     date = utils.parse_date_input(arg)
     conf = dict(utils.read_config(file).items("reddit_config"))
 
+    log.info("Fetching reddit posts ...")
     conn = praw.Reddit(
         client_id=conf["client_id"],
         client_secret=conf["secret"],
         username=conf["username"],
         user_agent="My User Agent",
     )
-
     posts = subreddit_posts(conn, conf, date)
+
+    log.info("Extracting data ...")
     df = extract_data(posts)
     df = transform(df)
+
     out_file = "/tmp/reddit-{}-{}.csv".format(conf["subreddit"], arg)
+    log.info(f"Writing to '{out_file}'...")
     df.to_csv(out_file, index=False)
